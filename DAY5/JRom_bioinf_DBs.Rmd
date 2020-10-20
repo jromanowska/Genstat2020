@@ -1,0 +1,71 @@
+---
+title: "How to use results of genetic epidemiological analyses to improve our understanding of biology?"
+author: "Julia Romanowska"
+date: "Dec. 4th, 2020"
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+    lib_dir: libs
+    nature:
+      highlightStyle: solarized-light
+      highlightLines: true
+      countIncrementalSlides: false
+fig_width: 13
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.width = 13, results = "hide",
+                      message = FALSE)
+options(htmltools.dir.version = FALSE)
+library(xaringanthemer)
+style_solarized_light()
+xaringanExtra::use_clipboard()
+xaringanExtra::use_fit_screen()
+```
+
+class: left, inverse, bottom
+
+# OVERVIEW
+
+## What kind of results?
+## How to expand the results set?
+## Genetic results
+## Epigenetic results
+## Heterogenous results
+
+???
+
+---
+
+## What kind of results?
+
+- RR, RRR
+- meQTLs = SNP + CpG
+- DMR / VMR
+- CpGs / regulatory regions / SNPs / genes
+
+---
+
+## How to expand the results set?
+
+- search engines:
+
+    - Omics Discovery Index (https://www.omicsdi.org/)
+    - GWAS catalog (https://www.ebi.ac.uk/gwas/) by EMBL-EBI
+    - EWAS atlas (http://bigd.big.ac.cn/ewas/)
+    - EWAS catalog (http://www.ewascatalog.org/) by Univ.of Bristol, UK
+    - mQTL db (http://www.mqtldb.org/)
+    - OpenTarget (https://www.targetvalidation.org/)
+
+---
+
+## Genetic results
+
+- SNPs / CpGs / regions
+
+    - visualize in ensembl (http://www.ensembl.org)
+
+- genes => proteins
+
+    - protein-protein interactions: String DB (https://string-db.org/)
+    - information about proteins: UniProt (https://www.uniprot.org/)
