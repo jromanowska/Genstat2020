@@ -9,6 +9,14 @@ output:
     toc: true
 ---
 
+```{r setup, include=FALSE}
+library(readr)
+library(tibble)
+exmpls.dir <- system.file("extdata", package = "Haplin")
+exmpl.file1 <- file.path(exmpls.dir, "HAPLIN.trialdata.txt")
+exmpl.file2 <- file.path(exmpls.dir, "exmpl_data.ped")
+```
+
 # Reading the data into Haplin
 
 Haplin reads data in two formats:
@@ -20,8 +28,8 @@ Haplin reads data in two formats:
 Let's check how does the Haplin format look like:
 
 ```{r}
-haplin.data <- read.table("HAPLIN.trialdata.txt", stringsAsFactors = FALSE)
-head(haplin.data)
+haplin.data <- read_delim(exmpl.file1, delim = " ", col_names = FALSE)
+haplin.data
 ```
 
 Both types of data are read in through the use of `genDataRead` function:
@@ -29,9 +37,9 @@ Both types of data are read in through the use of `genDataRead` function:
 ```{r}
 library(Haplin)
 
-my.ped.data <- genDataRead(file.in = "data.ped", file.out = "my_ped_data",
+my.ped.data <- genDataRead(file.in = exmpl.file2, file.out = "my_ped_data",
   dir.out = ".", format = "ped")
-my.haplin.data <- genDataRead(file.in = "HAPLIN.trialdata.txt",
+my.haplin.data <- genDataRead(file.in = exmpl.file1,
   file.out = "my_haplin_data", dir.out = ".", format = "haplin", n.vars = 0)
 ```
 
@@ -48,8 +56,8 @@ The `genDataRead` function returns a list object with three elements:
 The above function reads in also any additional covariate data the user has through the parameter `cov.file.in`:
 
 ```{r}
-my.haplin.data2 <- genDataRead(file.in = "HAPLIN.trialdata.txt",
-  file.out = "my_haplin_data_cov", cov.file.in = "add_cov.dat",
+my.haplin.data2 <- genDataRead(file.in = exmpl.file1, file.out = "my_haplin_data_cov",
+  cov.file.in = file.path(exmpls.dir, "add_cov_data2.dat"),
   dir.out = ".", format = "haplin", n.vars = 0)
 ```
 
@@ -79,26 +87,26 @@ If you want to show and/or extract part of phenotype information, you can use th
 
 ```{r showPheno_demo}
 # by default - showing first 5 entries:
-showPheno( my.ped.data )
+showPheno(my.ped.data)
 # getting all the info:
-head( showPheno( my.ped.data, n = "all" ), n = 20 )
-showPheno( my.ped.data, from = 4, to = 15 )
+head(showPheno(my.ped.data, n = "all"), n = 20)
+showPheno(my.ped.data, from = 4, to = 15)
 # show information about females only:
-head( showPheno( my.ped.data, sex = 2, n = "all" ), n = 20 )
+head(showPheno(my.ped.data, sex = 2, n = "all"), n = 20)
 ```
 
 The output can be saved to an object:
 
 ```{r showPheno_demo2}
-females.pheno <- showPheno( my.ped.data, sex = 2 )
-head( females.pheno )
+females.pheno <- showPheno(my.ped.data, sex = 2)
+head(females.pheno)
 ```
 
 With the functions `nindiv` and `nfam`, you can get the number of individuals or number of families in your data:
 
 ```{r nindiv_demo}
-nindiv( my.ped.data )
-nfam( my.ped.data )
+nindiv(my.ped.data)
+nfam(my.ped.data)
 ```
 
 Note that the `nfam` function assumes that your dataset is from a triad or dyad study, i.e., includes information on the child and at least one parent.
@@ -108,27 +116,27 @@ Note that the `nfam` function assumes that your dataset is from a triad or dyad 
 The function `nsnps` will tell us how many markers/SNPs there is in the data. Be careful since per default it assumes that the data is triad data (i.e., mother, father, and child were genotyped), so if your data is from a case-control study, be sure to specify that with argument `design = "cc"`.
 
 ```{r nsnps}
-nsnps( my.ped.data )
+nsnps(my.ped.data)
 ```
 
 To get the SNP names use:
 
 ```{r showSNPnames}
-showSNPnames( my.ped.data ) # by default - showing only first 5 SNPs
-showSNPnames( my.ped.data, from = 12, to = 31 )
+showSNPnames(my.ped.data) # by default - showing only first 5 SNPs
+showSNPnames(my.ped.data, from = 12, to = 31)
 ```
 
 To extract and/or show genotypes for specific individuals or markers, use the `showGen` function:
 
 ```{r showGen_demo}
-showGen( my.ped.data, markers = c( 10,15,121 ) ) # by default - showing first 5 entries
-showGen( my.ped.data, from = 31, to = 231 )
+showGen(my.ped.data, markers = c(10,15,121)) # by default - showing first 5 entries
+showGen(my.ped.data, from = 31, to = 231)
 ```
 
 As above, this output can be saved to an object:
 
 ```{r showGen_demo2}
-subset.genes <- showGen( my.ped.data, from = 31, to = 231, markers = c( 10,15,121 ) )
+subset.genes <- showGen(my.ped.data, from = 31, to = 231, markers = c(10,15,121))
 subset.genes
 ```
 
@@ -139,7 +147,8 @@ _CAUTION:_ Note that these functions work only with objects resulting from `genD
 After loading the data, it is necessary to pre-process it to the internal format used by Haplin. This is done by evoking the command:
 
 ```{r}
-my.prepared.ped.data <- genDataPreprocess(data.in = my.ped.data, map.file = "data1.map",
+my.prepared.ped.data <- genDataPreprocess(data.in = my.ped.data,
+  map.file = file.path(exmpls.dir, "exmpl_data.map"),
   design = "triad", file.out = "my_prepared_ped_data", dir.out = ".")
 ```
 
@@ -151,9 +160,6 @@ _NOTE:_ The information on the `my.prepared.ped.data` object can be displayed by
 
 ```{r}
 my.prepared.ped.data
-
-head(my.prepared.ped.data$cov.data)
-my.prepared.ped.data$gen.data[[ 1 ]][ 1:10,1:10 ]
 ```
 
 
