@@ -28,5 +28,12 @@ packageVersion("readr")
 ## Plotting some data based on data stored in mtcars
 plot(mpg~hp, data = mtcars, col = cyl, lwd = 2)
 
+## Checking that the RTools-dependency works
+exmpls.dir <- system.file("extdata", package = "Haplin")
+exmpl.file1 <- file.path(exmpls.dir, "HAPLIN.trialdata.txt")
 
+my.haplin.data <- genDataRead(file.in = exmpl.file1,
+  file.out = "my_haplin_data", dir.out = ".", format = "haplin", n.vars = 0)
 
+rm(my.haplin.data)
+unlink(list.files(pattern = "my_haplin_data*"))
