@@ -7,7 +7,13 @@ cat("\014")
 rm(list = ls(all.names = TRUE))
 
 ## Installs necessary packages
-install.packages(pkgs = c("Haplin","dplyr","tidyr","readr"))
+install.packages(pkgs = c("Haplin",
+	"dplyr",
+	"tidyr",
+	"readr",
+	"feather",
+	"glmnet",
+	"doParaller"))
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 BiocManager::install("snpStats", update = FALSE)
 
@@ -17,6 +23,7 @@ library(Haplin)
 library(dplyr)
 library(tidyr)
 library(readr)
+library(glmnet)
 ## Checking
 ## packageVersion should return version the version of the package
 ## If packageVersion returns error or warning, please consult your nearest R expert
@@ -24,6 +31,7 @@ packageVersion("Haplin")
 packageVersion("dplyr")
 packageVersion("tidyr")
 packageVersion("readr")
+packageVersion("glmnet")
 
 ## Plotting some data based on data stored in mtcars
 plot(mpg~hp, data = mtcars, col = cyl, lwd = 2)
