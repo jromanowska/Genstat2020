@@ -10,6 +10,7 @@ output:
       highlightStyle: solarized-light
       highlightLines: true
       countIncrementalSlides: false
+    self_contained: true
 fig_width: 13
 ---
 
