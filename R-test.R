@@ -13,7 +13,7 @@ install.packages(pkgs = c("Haplin",
 	"readr",
 	"feather",
 	"glmnet",
-	"doParaller"))
+	"doParallel"))
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 BiocManager::install("snpStats", update = FALSE)
 
