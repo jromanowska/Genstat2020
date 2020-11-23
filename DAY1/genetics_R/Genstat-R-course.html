@@ -13,7 +13,7 @@
 
 <meta name="author" content="Øystein Haaland, Miriam Gjerdevik, Julia Romanowska" />
 
-<meta name="date" content="2020-10-19" />
+<meta name="date" content="2020-11-23" />
 
 <title>NORBIS GENESTAT course, R intro</title>
 
@@ -159,7 +159,7 @@ code span.ot { color: #007020; }
 <header>
 <h1 class="title toc-ignore">NORBIS GENESTAT course, R intro</h1>
 <h3 class="author">Øystein Haaland, Miriam Gjerdevik, Julia Romanowska</h3>
-<h3 class="date">2020-10-19</h3>
+<h3 class="date">2020-11-23</h3>
 </header>
 
 <hr>
@@ -791,7 +791,7 @@ code span.ot { color: #007020; }
 <ol start="2" style="list-style-type: decimal">
 <li>Show the first 10 lines of <code>data.ped</code></li>
 </ol>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1"></a><span class="kw">read_table2</span>(<span class="st">&quot;data.ped&quot;</span>, <span class="dt">col_names =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1"></a><span class="kw">read_table2</span>(<span class="st">&quot;data.ped&quot;</span>, <span class="dt">col_names =</span> <span class="ot">FALSE</span>, <span class="dt">n_max =</span> <span class="dv">20</span>)</span></code></pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   .default = col_character(),
@@ -800,7 +800,7 @@ code span.ot { color: #007020; }
 ##   X6 = col_double()
 ## )</code></pre>
 <pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## # A tibble: 1,659 x 864
+<pre><code>## # A tibble: 20 x 864
 ##       X1 X2    X3    X4       X5    X6 X7    X8    X9    X10   X11   X12   X13  
 ##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
 ##  1     1 1_1   1_3   1_2       2     1 G     G     T     A     A     T     C    
@@ -813,24 +813,33 @@ code span.ot { color: #007020; }
 ##  8     3 3_2   0     0         2     1 G     G     A     A     T     T     G    
 ##  9     3 3_3   0     0         1     0 G     G     A     A     T     T     C    
 ## 10     4 4_1   4_3   4_2       1     1 G     G     T     A     A     T     G    
-## # … with 1,649 more rows, and 851 more variables: X14 &lt;chr&gt;, X15 &lt;chr&gt;,
-## #   X16 &lt;chr&gt;, X17 &lt;chr&gt;, X18 &lt;chr&gt;, X19 &lt;chr&gt;, X20 &lt;chr&gt;, X21 &lt;chr&gt;,
-## #   X22 &lt;chr&gt;, X23 &lt;chr&gt;, X24 &lt;chr&gt;, X25 &lt;chr&gt;, X26 &lt;chr&gt;, X27 &lt;chr&gt;,
-## #   X28 &lt;chr&gt;, X29 &lt;chr&gt;, X30 &lt;chr&gt;, X31 &lt;chr&gt;, X32 &lt;chr&gt;, X33 &lt;chr&gt;,
-## #   X34 &lt;chr&gt;, X35 &lt;chr&gt;, X36 &lt;chr&gt;, X37 &lt;chr&gt;, X38 &lt;chr&gt;, X39 &lt;chr&gt;,
-## #   X40 &lt;chr&gt;, X41 &lt;chr&gt;, X42 &lt;chr&gt;, X43 &lt;chr&gt;, X44 &lt;chr&gt;, X45 &lt;chr&gt;,
-## #   X46 &lt;chr&gt;, X47 &lt;chr&gt;, X48 &lt;chr&gt;, X49 &lt;chr&gt;, X50 &lt;chr&gt;, X51 &lt;chr&gt;,
-## #   X52 &lt;chr&gt;, X53 &lt;chr&gt;, X54 &lt;chr&gt;, X55 &lt;chr&gt;, X56 &lt;chr&gt;, X57 &lt;chr&gt;,
-## #   X58 &lt;chr&gt;, X59 &lt;chr&gt;, X60 &lt;chr&gt;, X61 &lt;chr&gt;, X62 &lt;chr&gt;, X63 &lt;chr&gt;,
-## #   X64 &lt;chr&gt;, X65 &lt;chr&gt;, X66 &lt;chr&gt;, X67 &lt;chr&gt;, X68 &lt;chr&gt;, X69 &lt;chr&gt;,
-## #   X70 &lt;chr&gt;, X71 &lt;chr&gt;, X72 &lt;chr&gt;, X73 &lt;chr&gt;, X74 &lt;chr&gt;, X75 &lt;chr&gt;,
-## #   X76 &lt;chr&gt;, X77 &lt;chr&gt;, X78 &lt;chr&gt;, X79 &lt;chr&gt;, X80 &lt;chr&gt;, X81 &lt;chr&gt;,
-## #   X82 &lt;chr&gt;, X83 &lt;chr&gt;, X84 &lt;chr&gt;, X85 &lt;chr&gt;, X86 &lt;chr&gt;, X87 &lt;chr&gt;,
-## #   X88 &lt;chr&gt;, X89 &lt;chr&gt;, X90 &lt;chr&gt;, X91 &lt;chr&gt;, X92 &lt;chr&gt;, X93 &lt;chr&gt;,
-## #   X94 &lt;chr&gt;, X95 &lt;chr&gt;, X96 &lt;chr&gt;, X97 &lt;chr&gt;, X98 &lt;chr&gt;, X99 &lt;chr&gt;,
-## #   X100 &lt;chr&gt;, X101 &lt;chr&gt;, X102 &lt;chr&gt;, X103 &lt;chr&gt;, X104 &lt;chr&gt;, X105 &lt;chr&gt;,
-## #   X106 &lt;chr&gt;, X107 &lt;chr&gt;, X108 &lt;chr&gt;, X109 &lt;chr&gt;, X110 &lt;chr&gt;, X111 &lt;chr&gt;,
-## #   X112 &lt;chr&gt;, X113 &lt;chr&gt;, …</code></pre>
+## 11     4 4_2   0     0         2     0 G     G     T     A     A     T     G    
+## 12     4 4_3   0     0         1     0 G     G     A     A     T     T     G    
+## 13     5 5_1   5_3   5_2       2     1 G     G     T     A     T     T     G    
+## 14     5 5_2   0     0         2     0 G     G     A     A     T     T     G    
+## 15     5 5_3   0     0         1     1 G     G     T     A     A     T     G    
+## 16     6 6_1   6_3   6_2       1     1 G     G     A     A     T     T     0    
+## 17     6 6_2   0     0         2     1 G     G     A     A     A     T     G    
+## 18     6 6_3   0     0         1     0 0     0     0     0     0     0     0    
+## 19     7 7_1   7_3   7_2       2     1 G     G     T     A     A     T     G    
+## 20     7 7_2   0     0         2     1 G     G     T     A     A     T     G    
+## # … with 851 more variables: X14 &lt;chr&gt;, X15 &lt;chr&gt;, X16 &lt;chr&gt;, X17 &lt;chr&gt;,
+## #   X18 &lt;chr&gt;, X19 &lt;chr&gt;, X20 &lt;chr&gt;, X21 &lt;chr&gt;, X22 &lt;chr&gt;, X23 &lt;chr&gt;,
+## #   X24 &lt;chr&gt;, X25 &lt;chr&gt;, X26 &lt;chr&gt;, X27 &lt;chr&gt;, X28 &lt;chr&gt;, X29 &lt;chr&gt;,
+## #   X30 &lt;chr&gt;, X31 &lt;chr&gt;, X32 &lt;chr&gt;, X33 &lt;chr&gt;, X34 &lt;chr&gt;, X35 &lt;chr&gt;,
+## #   X36 &lt;chr&gt;, X37 &lt;chr&gt;, X38 &lt;chr&gt;, X39 &lt;chr&gt;, X40 &lt;chr&gt;, X41 &lt;chr&gt;,
+## #   X42 &lt;chr&gt;, X43 &lt;chr&gt;, X44 &lt;chr&gt;, X45 &lt;chr&gt;, X46 &lt;chr&gt;, X47 &lt;chr&gt;,
+## #   X48 &lt;chr&gt;, X49 &lt;chr&gt;, X50 &lt;chr&gt;, X51 &lt;chr&gt;, X52 &lt;chr&gt;, X53 &lt;chr&gt;,
+## #   X54 &lt;chr&gt;, X55 &lt;chr&gt;, X56 &lt;chr&gt;, X57 &lt;chr&gt;, X58 &lt;chr&gt;, X59 &lt;chr&gt;,
+## #   X60 &lt;chr&gt;, X61 &lt;chr&gt;, X62 &lt;chr&gt;, X63 &lt;chr&gt;, X64 &lt;chr&gt;, X65 &lt;chr&gt;,
+## #   X66 &lt;chr&gt;, X67 &lt;chr&gt;, X68 &lt;chr&gt;, X69 &lt;chr&gt;, X70 &lt;chr&gt;, X71 &lt;chr&gt;,
+## #   X72 &lt;chr&gt;, X73 &lt;chr&gt;, X74 &lt;chr&gt;, X75 &lt;chr&gt;, X76 &lt;chr&gt;, X77 &lt;chr&gt;,
+## #   X78 &lt;chr&gt;, X79 &lt;chr&gt;, X80 &lt;chr&gt;, X81 &lt;chr&gt;, X82 &lt;chr&gt;, X83 &lt;chr&gt;,
+## #   X84 &lt;chr&gt;, X85 &lt;chr&gt;, X86 &lt;chr&gt;, X87 &lt;chr&gt;, X88 &lt;chr&gt;, X89 &lt;chr&gt;,
+## #   X90 &lt;chr&gt;, X91 &lt;chr&gt;, X92 &lt;chr&gt;, X93 &lt;chr&gt;, X94 &lt;chr&gt;, X95 &lt;chr&gt;,
+## #   X96 &lt;chr&gt;, X97 &lt;chr&gt;, X98 &lt;chr&gt;, X99 &lt;chr&gt;, X100 &lt;chr&gt;, X101 &lt;chr&gt;,
+## #   X102 &lt;chr&gt;, X103 &lt;chr&gt;, X104 &lt;chr&gt;, X105 &lt;chr&gt;, X106 &lt;chr&gt;, X107 &lt;chr&gt;,
+## #   X108 &lt;chr&gt;, X109 &lt;chr&gt;, X110 &lt;chr&gt;, X111 &lt;chr&gt;, X112 &lt;chr&gt;, X113 &lt;chr&gt;, …</code></pre>
 <p>PED-format:</p>
 <table>
 <thead>

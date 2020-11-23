@@ -320,7 +320,7 @@ read_table2("data.map", col_names = FALSE)
 2. Show the first 10 lines of `data.ped`
 
 ```{r}
-read_table2("data.ped", col_names = FALSE)
+read_table2("data.ped", col_names = FALSE, n_max = 20)
 ```
 
 PED-format:
