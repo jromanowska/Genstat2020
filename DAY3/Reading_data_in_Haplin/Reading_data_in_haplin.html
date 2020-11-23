@@ -13,7 +13,7 @@
 
 <meta name="author" content="Julia Romanowska" />
 
-<meta name="date" content="2020-10-20" />
+<meta name="date" content="2020-11-23" />
 
 <title>Reading data in Haplin</title>
 
@@ -159,7 +159,7 @@ code span.ot { color: #007020; }
 <header>
 <h1 class="title toc-ignore">Reading data in Haplin</h1>
 <h3 class="author">Julia Romanowska</h3>
-<h3 class="date">2020-10-20</h3>
+<h3 class="date">2020-11-23</h3>
 </header>
 
 <hr>
@@ -172,11 +172,12 @@ code span.ot { color: #007020; }
 <li><a href="#displaying-and-extracting-phenotype-information">Displaying and extracting phenotype information</a></li>
 <li><a href="#displaying-and-extracting-genotype-information">Displaying and extracting genotype information</a></li>
 </ul></li>
-<li><a href="#preparing-your-data">Preparing your data</a></li>
 <li><a href="#subset">Choosing a subset of data</a><ul>
 <li><a href="#useful-shortcut-functions">Useful shortcut functions</a></li>
+<li><a href="#example">Example</a></li>
 </ul></li>
 <li><a href="#re-using-the-data">Re-using the data</a></li>
+<li><a href="#preparing-your-data">Preparing your data</a></li>
 </ul>
 </div>
 
@@ -214,15 +215,10 @@ code span.ot { color: #007020; }
 ## 10 1;4   1;3   1;3   C;C   C;C   C;C  
 ## # … with 239 more rows</code></pre>
 <p>Both types of data are read in through the use of <code>genDataRead</code> function:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">library</span>(Haplin)</span></code></pre></div>
-<pre><code>## Registered S3 methods overwritten by &#39;ffbase&#39;:
-##   method   from
-##   [.ff     ff  
-##   [.ffdf   ff  
-##   [&lt;-.ff   ff  
-##   [&lt;-.ffdf ff</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>my.ped.data &lt;-<span class="st"> </span><span class="kw">genDataRead</span>(<span class="dt">file.in =</span> exmpl.file2, <span class="dt">file.out =</span> <span class="st">&quot;my_ped_data&quot;</span>,</span>
-<span id="cb7-2"><a href="#cb7-2"></a>  <span class="dt">dir.out =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">format =</span> <span class="st">&quot;ped&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">library</span>(Haplin)</span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a>my.ped.data &lt;-<span class="st"> </span><span class="kw">genDataRead</span>(<span class="dt">file.in =</span> exmpl.file2, <span class="dt">file.out =</span> <span class="st">&quot;my_ped_data&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>  <span class="dt">dir.out =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">format =</span> <span class="st">&quot;ped&quot;</span>)</span></code></pre></div>
 <pre><code>## &#39;n.vars&#39; was not given explicitly and will be set to 6 based on the format given.
 ## Reading the data in chunks...
 ##  -- chunk 1 --
@@ -236,8 +232,8 @@ code span.ot { color: #007020; }
 ## ... done preparing
 ## Saving data...
 ## ... saved to files: ./my_ped_data_gen.ffData, ./my_ped_data_gen.RData</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>my.haplin.data &lt;-<span class="st"> </span><span class="kw">genDataRead</span>(<span class="dt">file.in =</span> exmpl.file1,</span>
-<span id="cb11-2"><a href="#cb11-2"></a>  <span class="dt">file.out =</span> <span class="st">&quot;my_haplin_data&quot;</span>, <span class="dt">dir.out =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">format =</span> <span class="st">&quot;haplin&quot;</span>, <span class="dt">n.vars =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>my.haplin.data &lt;-<span class="st"> </span><span class="kw">genDataRead</span>(<span class="dt">file.in =</span> exmpl.file1,</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  <span class="dt">file.out =</span> <span class="st">&quot;my_haplin_data&quot;</span>, <span class="dt">dir.out =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">format =</span> <span class="st">&quot;haplin&quot;</span>, <span class="dt">n.vars =</span> <span class="dv">0</span>)</span></code></pre></div>
 <pre><code>## Reading the data in chunks...
 ##  -- chunk 1 --
 ##  -- chunk 2 -- 
@@ -259,9 +255,9 @@ code span.ot { color: #007020; }
 <li><em>aux</em> - a list with auxiliary information, used internally in Haplin.</li>
 </ul>
 <p>The above function reads in also any additional covariate data the user has through the parameter <code>cov.file.in</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>my.haplin.data2 &lt;-<span class="st"> </span><span class="kw">genDataRead</span>(<span class="dt">file.in =</span> exmpl.file1, <span class="dt">file.out =</span> <span class="st">&quot;my_haplin_data_cov&quot;</span>,</span>
-<span id="cb15-2"><a href="#cb15-2"></a>  <span class="dt">cov.file.in =</span> <span class="kw">file.path</span>(exmpls.dir, <span class="st">&quot;add_cov_data2.dat&quot;</span>),</span>
-<span id="cb15-3"><a href="#cb15-3"></a>  <span class="dt">dir.out =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">format =</span> <span class="st">&quot;haplin&quot;</span>, <span class="dt">n.vars =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>my.haplin.data2 &lt;-<span class="st"> </span><span class="kw">genDataRead</span>(<span class="dt">file.in =</span> exmpl.file1, <span class="dt">file.out =</span> <span class="st">&quot;my_haplin_data_cov&quot;</span>,</span>
+<span id="cb13-2"><a href="#cb13-2"></a>  <span class="dt">cov.file.in =</span> <span class="kw">file.path</span>(exmpls.dir, <span class="st">&quot;add_cov_data2.dat&quot;</span>),</span>
+<span id="cb13-3"><a href="#cb13-3"></a>  <span class="dt">dir.out =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">format =</span> <span class="st">&quot;haplin&quot;</span>, <span class="dt">n.vars =</span> <span class="dv">0</span>)</span></code></pre></div>
 <pre><code>## Reading the data in chunks...
 ##  -- chunk 1 --
 ##  -- chunk 2 -- 
@@ -279,7 +275,7 @@ code span.ot { color: #007020; }
 ## ... saved to files: ./my_haplin_data_cov_gen.ffData, ./my_haplin_data_cov_gen.RData</code></pre>
 <p>The file with the additional information should have a header with names of the data columns!</p>
 <p>To see all the available arguments and usage examples, type:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>?genDataRead</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>?genDataRead</span></code></pre></div>
 <p>(this works also with any other function)</p>
 </div>
 <div id="accessing-the-information-in-the-loaded-data" class="section level1">
@@ -288,7 +284,7 @@ code span.ot { color: #007020; }
 <div id="displaying-and-extracting-phenotype-information" class="section level2">
 <h2>Displaying and extracting phenotype information</h2>
 <p>First of all, when you type in the name of the object, a short summary will be displayed:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>my.ped.data</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>my.ped.data</span></code></pre></div>
 <pre><code>## This is raw genetic data read in through genDataRead.
 ## 
 ## It contains the following parts:
@@ -300,16 +296,16 @@ code span.ot { color: #007020; }
 ##   - number of markers =  429 ,
 ##   - number of data lines =  1659</code></pre>
 <p>If you want to show and/or extract part of phenotype information, you can use the <code>showPheno</code> function:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># by default - showing first 5 entries:</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a><span class="kw">showPheno</span>(my.ped.data)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># by default - showing first 5 entries:</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="kw">showPheno</span>(my.ped.data)</span></code></pre></div>
 <pre><code>##      id.fam id.c id.f id.m sex cc 
 ## [1,] &quot;1&quot;    &quot;1&quot;  &quot;3&quot;  &quot;2&quot;  &quot;2&quot; &quot;1&quot;
 ## [2,] &quot;1&quot;    &quot;2&quot;  &quot;0&quot;  &quot;0&quot;  &quot;2&quot; &quot;0&quot;
 ## [3,] &quot;1&quot;    &quot;3&quot;  &quot;0&quot;  &quot;0&quot;  &quot;1&quot; &quot;1&quot;
 ## [4,] &quot;2&quot;    &quot;1&quot;  &quot;3&quot;  &quot;2&quot;  &quot;1&quot; &quot;0&quot;
 ## [5,] &quot;2&quot;    &quot;2&quot;  &quot;0&quot;  &quot;0&quot;  &quot;2&quot; &quot;0&quot;</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># getting all the info:</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a><span class="kw">head</span>(<span class="kw">showPheno</span>(my.ped.data, <span class="dt">n =</span> <span class="st">&quot;all&quot;</span>), <span class="dt">n =</span> <span class="dv">20</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># getting all the info:</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="kw">head</span>(<span class="kw">showPheno</span>(my.ped.data, <span class="dt">n =</span> <span class="st">&quot;all&quot;</span>), <span class="dt">n =</span> <span class="dv">20</span>)</span></code></pre></div>
 <pre><code>##       id.fam id.c id.f id.m sex cc 
 ##  [1,] &quot;1&quot;    &quot;1&quot;  &quot;3&quot;  &quot;2&quot;  &quot;2&quot; &quot;1&quot;
 ##  [2,] &quot;1&quot;    &quot;2&quot;  &quot;0&quot;  &quot;0&quot;  &quot;2&quot; &quot;0&quot;
@@ -331,7 +327,7 @@ code span.ot { color: #007020; }
 ## [18,] &quot;6&quot;    &quot;3&quot;  &quot;0&quot;  &quot;0&quot;  &quot;1&quot; &quot;0&quot;
 ## [19,] &quot;7&quot;    &quot;1&quot;  &quot;3&quot;  &quot;2&quot;  &quot;2&quot; &quot;1&quot;
 ## [20,] &quot;7&quot;    &quot;2&quot;  &quot;0&quot;  &quot;0&quot;  &quot;2&quot; &quot;1&quot;</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">showPheno</span>(my.ped.data, <span class="dt">from =</span> <span class="dv">4</span>, <span class="dt">to =</span> <span class="dv">15</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">showPheno</span>(my.ped.data, <span class="dt">from =</span> <span class="dv">4</span>, <span class="dt">to =</span> <span class="dv">15</span>)</span></code></pre></div>
 <pre><code>##       id.fam id.c id.f id.m sex cc 
 ##  [1,] &quot;2&quot;    &quot;1&quot;  &quot;3&quot;  &quot;2&quot;  &quot;1&quot; &quot;0&quot;
 ##  [2,] &quot;2&quot;    &quot;2&quot;  &quot;0&quot;  &quot;0&quot;  &quot;2&quot; &quot;0&quot;
@@ -345,8 +341,8 @@ code span.ot { color: #007020; }
 ## [10,] &quot;5&quot;    &quot;1&quot;  &quot;3&quot;  &quot;2&quot;  &quot;2&quot; &quot;1&quot;
 ## [11,] &quot;5&quot;    &quot;2&quot;  &quot;0&quot;  &quot;0&quot;  &quot;2&quot; &quot;0&quot;
 ## [12,] &quot;5&quot;    &quot;3&quot;  &quot;0&quot;  &quot;0&quot;  &quot;1&quot; &quot;1&quot;</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="co"># show information about females only:</span></span>
-<span id="cb28-2"><a href="#cb28-2"></a><span class="kw">head</span>(<span class="kw">showPheno</span>(my.ped.data, <span class="dt">sex =</span> <span class="dv">2</span>, <span class="dt">n =</span> <span class="st">&quot;all&quot;</span>), <span class="dt">n =</span> <span class="dv">20</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># show information about females only:</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a><span class="kw">head</span>(<span class="kw">showPheno</span>(my.ped.data, <span class="dt">sex =</span> <span class="dv">2</span>, <span class="dt">n =</span> <span class="st">&quot;all&quot;</span>), <span class="dt">n =</span> <span class="dv">20</span>)</span></code></pre></div>
 <pre><code>##       id.fam id.c id.f id.m sex cc 
 ##  [1,] &quot;1&quot;    &quot;1&quot;  &quot;3&quot;  &quot;2&quot;  &quot;2&quot; &quot;1&quot;
 ##  [2,] &quot;1&quot;    &quot;2&quot;  &quot;0&quot;  &quot;0&quot;  &quot;2&quot; &quot;0&quot;
@@ -369,8 +365,8 @@ code span.ot { color: #007020; }
 ## [19,] &quot;13&quot;   &quot;2&quot;  &quot;0&quot;  &quot;0&quot;  &quot;2&quot; &quot;0&quot;
 ## [20,] &quot;14&quot;   &quot;1&quot;  &quot;3&quot;  &quot;2&quot;  &quot;2&quot; &quot;1&quot;</code></pre>
 <p>The output can be saved to an object:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>females.pheno &lt;-<span class="st"> </span><span class="kw">showPheno</span>(my.ped.data, <span class="dt">sex =</span> <span class="dv">2</span>)</span>
-<span id="cb30-2"><a href="#cb30-2"></a><span class="kw">head</span>(females.pheno)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>females.pheno &lt;-<span class="st"> </span><span class="kw">showPheno</span>(my.ped.data, <span class="dt">sex =</span> <span class="dv">2</span>)</span>
+<span id="cb28-2"><a href="#cb28-2"></a><span class="kw">head</span>(females.pheno)</span></code></pre></div>
 <pre><code>##      id.fam id.c id.f id.m sex cc 
 ## [1,] &quot;1&quot;    &quot;1&quot;  &quot;3&quot;  &quot;2&quot;  &quot;2&quot; &quot;1&quot;
 ## [2,] &quot;1&quot;    &quot;2&quot;  &quot;0&quot;  &quot;0&quot;  &quot;2&quot; &quot;0&quot;
@@ -379,26 +375,26 @@ code span.ot { color: #007020; }
 ## [5,] &quot;4&quot;    &quot;2&quot;  &quot;0&quot;  &quot;0&quot;  &quot;2&quot; &quot;0&quot;
 ## [6,] &quot;5&quot;    &quot;1&quot;  &quot;3&quot;  &quot;2&quot;  &quot;2&quot; &quot;1&quot;</code></pre>
 <p>With the functions <code>nindiv</code> and <code>nfam</code>, you can get the number of individuals or number of families in your data:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="kw">nindiv</span>(my.ped.data)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">nindiv</span>(my.ped.data)</span></code></pre></div>
 <pre><code>## [1] 1659</code></pre>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="kw">nfam</span>(my.ped.data)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="kw">nfam</span>(my.ped.data)</span></code></pre></div>
 <pre><code>## [1] 550</code></pre>
 <p>Note that the <code>nfam</code> function assumes that your dataset is from a triad or dyad study, i.e., includes information on the child and at least one parent.</p>
 </div>
 <div id="displaying-and-extracting-genotype-information" class="section level2">
 <h2>Displaying and extracting genotype information</h2>
 <p>The function <code>nsnps</code> will tell us how many markers/SNPs there is in the data. Be careful since per default it assumes that the data is triad data (i.e., mother, father, and child were genotyped), so if your data is from a case-control study, be sure to specify that with argument <code>design = &quot;cc&quot;</code>.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="kw">nsnps</span>(my.ped.data)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="kw">nsnps</span>(my.ped.data)</span></code></pre></div>
 <pre><code>## [1] 429</code></pre>
 <p>To get the SNP names use:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">showSNPnames</span>(my.ped.data) <span class="co"># by default - showing only first 5 SNPs</span></span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="kw">showSNPnames</span>(my.ped.data) <span class="co"># by default - showing only first 5 SNPs</span></span></code></pre></div>
 <pre><code>## [1] &quot;m1&quot; &quot;m2&quot; &quot;m3&quot; &quot;m4&quot; &quot;m5&quot;</code></pre>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="kw">showSNPnames</span>(my.ped.data, <span class="dt">from =</span> <span class="dv">12</span>, <span class="dt">to =</span> <span class="dv">31</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">showSNPnames</span>(my.ped.data, <span class="dt">from =</span> <span class="dv">12</span>, <span class="dt">to =</span> <span class="dv">31</span>)</span></code></pre></div>
 <pre><code>##  [1] &quot;m12&quot; &quot;m13&quot; &quot;m14&quot; &quot;m15&quot; &quot;m16&quot; &quot;m17&quot; &quot;m18&quot; &quot;m19&quot; &quot;m20&quot; &quot;m21&quot; &quot;m22&quot; &quot;m23&quot;
 ## [13] &quot;m24&quot; &quot;m25&quot; &quot;m26&quot; &quot;m27&quot; &quot;m28&quot; &quot;m29&quot; &quot;m30&quot; &quot;m31&quot;</code></pre>
 <p>To extract and/or show genotypes for specific individuals or markers, use the <code>showGen</code> function:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="kw">showGen</span>(my.ped.data, <span class="dt">markers =</span> <span class="kw">c</span>(<span class="dv">10</span>,<span class="dv">15</span>,<span class="dv">121</span>)) <span class="co"># by default - showing first 5 entries</span></span></code></pre></div>
-<pre><code>## opening ff /tmp/RtmpEfG5E5/ff628ee36c040.ff</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="kw">showGen</span>(my.ped.data, <span class="dt">markers =</span> <span class="kw">c</span>(<span class="dv">10</span>,<span class="dv">15</span>,<span class="dv">121</span>)) <span class="co"># by default - showing first 5 entries</span></span></code></pre></div>
+<pre><code>## opening ff /tmp/RtmpxcPefQ/ff7d2b7ac4bbdd.ff</code></pre>
 <pre><code>## ff (open) byte length=30 (30) dim=c(5,6) dimorder=c(1,2) levels: G &lt;NA&gt; C T A
 ##      l_m10_a l_m10_b l_m15_a l_m15_b l_m121_a l_m121_b
 ## [1,]       T       T       A       T        T        T
@@ -406,7 +402,7 @@ code span.ot { color: #007020; }
 ## [3,]       T       T       A       T        T        T
 ## [4,]       A       T       A       T        T        T
 ## [5,]       A       T       T       T        T        T</code></pre>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="kw">showGen</span>(my.ped.data, <span class="dt">from =</span> <span class="dv">31</span>, <span class="dt">to =</span> <span class="dv">231</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="kw">showGen</span>(my.ped.data, <span class="dt">from =</span> <span class="dv">31</span>, <span class="dt">to =</span> <span class="dv">231</span>)</span></code></pre></div>
 <pre><code>## ff (open) byte length=2010 (2010) dim=c(201,10) dimorder=c(1,2) levels: G &lt;NA&gt; C T A
 ##        l_m1_a l_m1_b l_m2_a l_m2_b l_m3_a l_m3_b l_m4_a l_m4_b l_m5_a l_m5_b
 ## [1,]        G      G      T      A      T      T      G      G      G      G
@@ -427,8 +423,8 @@ code span.ot { color: #007020; }
 ## [200,]      C      G      A      A      T      T      G      G      G      G
 ## [201,]      C      G      A      A      A      T      G      G      C      G</code></pre>
 <p>As above, this output can be saved to an object:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>subset.genes &lt;-<span class="st"> </span><span class="kw">showGen</span>(my.ped.data, <span class="dt">from =</span> <span class="dv">31</span>, <span class="dt">to =</span> <span class="dv">231</span>, <span class="dt">markers =</span> <span class="kw">c</span>(<span class="dv">10</span>,<span class="dv">15</span>,<span class="dv">121</span>))</span>
-<span id="cb47-2"><a href="#cb47-2"></a>subset.genes</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a>subset.genes &lt;-<span class="st"> </span><span class="kw">showGen</span>(my.ped.data, <span class="dt">from =</span> <span class="dv">31</span>, <span class="dt">to =</span> <span class="dv">231</span>, <span class="dt">markers =</span> <span class="kw">c</span>(<span class="dv">10</span>,<span class="dv">15</span>,<span class="dv">121</span>))</span>
+<span id="cb45-2"><a href="#cb45-2"></a>subset.genes</span></code></pre></div>
 <pre><code>## ff (open) byte length=1206 (1206) dim=c(201,6) dimorder=c(1,2) levels: G &lt;NA&gt; C T A
 ##        l_m10_a l_m10_b l_m15_a l_m15_b l_m121_a l_m121_b
 ## [1,]        A       T       T       T        A        T 
@@ -451,58 +447,17 @@ code span.ot { color: #007020; }
 <p><em>CAUTION:</em> Note that these functions work only with objects resulting from <code>genDataRead</code>, and not <code>genDataPreprocess</code>, as the preprocessing disturbs the coding of the data, thus making the output not easy to understand.</p>
 </div>
 </div>
-<div id="preparing-your-data" class="section level1">
-<h1>Preparing your data</h1>
-<p>After loading the data, it is necessary to pre-process it to the internal format used by Haplin. This is done by evoking the command:</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a>my.prepared.ped.data &lt;-<span class="st"> </span><span class="kw">genDataPreprocess</span>(<span class="dt">data.in =</span> my.ped.data,</span>
-<span id="cb49-2"><a href="#cb49-2"></a>  <span class="dt">map.file =</span> <span class="kw">file.path</span>(exmpls.dir, <span class="st">&quot;exmpl_data.map&quot;</span>),</span>
-<span id="cb49-3"><a href="#cb49-3"></a>  <span class="dt">design =</span> <span class="st">&quot;triad&quot;</span>, <span class="dt">file.out =</span> <span class="st">&quot;my_prepared_ped_data&quot;</span>, <span class="dt">dir.out =</span> <span class="st">&quot;.&quot;</span>)</span></code></pre></div>
-<pre><code>## Reading the marker names...</code></pre>
-<pre><code>## Warning: No map file given, map file empty or the number of map file rows not
-## equal to the number of markers in data; will generate dummy marker names.</code></pre>
-<pre><code>## ...done
-## Converting PED format to internal haplin...
-##    Creating unique IDs for individuals...
-##    ...done.
-## 
-## Checking family and id variables...</code></pre>
-<pre><code>## Warning: Found family size larger than 3! Will extract trios from general
-## pedigree.</code></pre>
-<pre><code>##    Sorting and re-coding families...
-## Recoding covariate data...
-## ...done
-## Recoding genetic data (no. of loci: 429)...
-##    ...running on only one CPU core! This may take some time...
-##    ...checking alleles per SNP...
-##    ...done, all alleles: C G A T 
-##    ...recoding SNPs...
-##    ...done
-## Saving data... 
-## ... saved to files: ./my_prepared_ped_data_gen.ffData ,  ./my_prepared_ped_data_gen.RData</code></pre>
-<p><em>CAUTION:</em> This action can be very time-consuming for large datasets (e.g., estimated time for ca.45,000 SNPs and 1,600 individuals, a PED file of ca.700MB, is ca.6 minutes on a 7-core CPU). However, this needs to be done only once and the output, stored in small files, can be used for the subsequent analysis repeatedly. (See also section <a href="#subset">Choosing a subset of data</a></p>
-<p>This will also create <code>.RData</code> and <code>.ffData</code> files, which take much less space than the input PED files. Be careful not to delete these files, as they can be re-used by simply loading into R (the <code>genDataLoad</code> function) right before Haplin analysis.</p>
-<p><em>NOTE:</em> The information on the <code>my.prepared.ped.data</code> object can be displayed by simply writing the name of the object.</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a>my.prepared.ped.data</span></code></pre></div>
-<pre><code>## 
-##      This is preprocessed data, ready for haplin analysis.
-## 
-##      It contains the following parts:
-##    cov.data, gen.data, aux 
-## 
-##      with following dimensions:
-##    - number of covariate variables =  10 ,  - number of markers =  429 ,  - number of individuals/families =  559</code></pre>
-</div>
 <div id="subset" class="section level1">
 <h1>Choosing a subset of data</h1>
 <p>If you know that you want to focus your analysis on a certain region of the entire SNP set, or perhaps you’re impatient and want to check out Haplin without waiting a long time for the preprocessing to finish, you can easily choose a subset of the data to pre-process and analyze. This can be done with the command:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a>my.ped.data.subset &lt;-<span class="st"> </span><span class="kw">genDataGetPart</span>(<span class="dt">data.in =</span> my.ped.data, <span class="dt">markers =</span> <span class="kw">c</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">15</span>,<span class="dv">22</span>),</span>
-<span id="cb57-2"><a href="#cb57-2"></a>  <span class="dt">design =</span> <span class="st">&quot;cc&quot;</span>, <span class="dt">file.out =</span> <span class="st">&quot;my_ped_data_subset&quot;</span>, <span class="dt">dir.out =</span> <span class="st">&quot;.&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>my.ped.data.subset &lt;-<span class="st"> </span><span class="kw">genDataGetPart</span>(<span class="dt">data.in =</span> my.ped.data, <span class="dt">markers =</span> <span class="kw">c</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">15</span>,<span class="dv">22</span>),</span>
+<span id="cb47-2"><a href="#cb47-2"></a>  <span class="dt">design =</span> <span class="st">&quot;cc&quot;</span>, <span class="dt">file.out =</span> <span class="st">&quot;my_ped_data_subset&quot;</span>, <span class="dt">dir.out =</span> <span class="st">&quot;.&quot;</span>)</span></code></pre></div>
 <pre><code>## Provided arguments:
 ##  --- chosen markers: 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 22 
 ## INFO: Will select 1659 rows and 28 columns.
 ## Saving data... 
 ## ... saved to files: ./my_ped_data_subset_gen.ffData, ./my_ped_data_subset_gen.RData</code></pre>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a>my.ped.data.subset</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a>my.ped.data.subset</span></code></pre></div>
 <pre><code>## This is raw genetic data read in through genDataRead.
 ## 
 ## It contains the following parts:
@@ -532,12 +487,183 @@ code span.ot { color: #007020; }
 <li><code>getFullTriads</code> - extracts only the full families, if the input data contains also dyads.</li>
 </ul>
 </div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>We will re-do the QC from DAY 1 on the entire dataset (not only children) and based on that, we will choose a subset of the data.</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="kw">library</span>(snpStats)</span></code></pre></div>
+<pre><code>## Loading required package: survival</code></pre>
+<pre><code>## Loading required package: Matrix</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>data_dir &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;..&quot;</span>, <span class="st">&quot;..&quot;</span>, <span class="st">&quot;DAY1&quot;</span>, <span class="st">&quot;genetics_R&quot;</span>)</span>
+<span id="cb54-2"><a href="#cb54-2"></a>raw.all &lt;-<span class="st"> </span><span class="kw">read.pedfile</span>(<span class="dt">file =</span> <span class="kw">file.path</span>(data_dir, <span class="st">&quot;data.ped&quot;</span>),</span>
+<span id="cb54-3"><a href="#cb54-3"></a>                        <span class="dt">snps =</span> <span class="kw">file.path</span>(data_dir, <span class="st">&quot;data.map&quot;</span>), <span class="dt">which =</span> <span class="dv">2</span>)</span>
+<span id="cb54-4"><a href="#cb54-4"></a>raw.all.gen &lt;-<span class="st"> </span>raw.all<span class="op">$</span>genotypes</span>
+<span id="cb54-5"><a href="#cb54-5"></a></span>
+<span id="cb54-6"><a href="#cb54-6"></a>qc.all &lt;-<span class="st"> </span><span class="kw">row.summary</span>(raw.all.gen)</span>
+<span id="cb54-7"><a href="#cb54-7"></a><span class="kw">summary</span>(qc.all)</span></code></pre></div>
+<pre><code>##    Call.rate      Certain.calls Heterozygosity  
+##  Min.   :0.0000   Min.   :1     Min.   :0.1305  
+##  1st Qu.:0.9953   1st Qu.:1     1st Qu.:0.2290  
+##  Median :0.9977   Median :1     Median :0.2774  
+##  Mean   :0.9454   Mean   :1     Mean   :0.2804  
+##  3rd Qu.:1.0000   3rd Qu.:1     3rd Qu.:0.3287  
+##  Max.   :1.0000   Max.   :1     Max.   :0.4403  
+##                   NA&#39;s   :84    NA&#39;s   :84</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>ok.call.rate &lt;-<span class="st"> </span>qc.all<span class="op">$</span>Call.rate <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.95</span></span>
+<span id="cb56-2"><a href="#cb56-2"></a>raw.all.ok &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">genotypes =</span> raw.all<span class="op">$</span>genotypes[ok.call.rate,],</span>
+<span id="cb56-3"><a href="#cb56-3"></a>                      <span class="dt">fam =</span> raw.all<span class="op">$</span>fam[ok.call.rate,],</span>
+<span id="cb56-4"><a href="#cb56-4"></a>                      <span class="dt">map =</span> raw.all<span class="op">$</span>map)</span>
+<span id="cb56-5"><a href="#cb56-5"></a></span>
+<span id="cb56-6"><a href="#cb56-6"></a>qc.all.marker &lt;-<span class="st"> </span><span class="kw">col.summary</span>(raw.all.ok<span class="op">$</span>genotypes)</span>
+<span id="cb56-7"><a href="#cb56-7"></a><span class="kw">summary</span>(qc.all.marker)</span></code></pre></div>
+<pre><code>##      Calls        Call.rate      Certain.calls      RAF         
+##  Min.   :1343   Min.   :0.8626   Min.   :1     Min.   :0.01096  
+##  1st Qu.:1555   1st Qu.:0.9987   1st Qu.:1     1st Qu.:0.13809  
+##  Median :1556   Median :0.9994   Median :1     Median :0.33945  
+##  Mean   :1553   Mean   :0.9973   Mean   :1     Mean   :0.36647  
+##  3rd Qu.:1557   3rd Qu.:1.0000   3rd Qu.:1     3rd Qu.:0.56109  
+##  Max.   :1557   Max.   :1.0000   Max.   :1     Max.   :0.95922  
+##       MAF               P.AA               P.AB             P.BB        
+##  Min.   :0.01096   Min.   :0.004496   Min.   :0.0136   Min.   :0.00000  
+##  1st Qu.:0.12813   1st Qu.:0.219152   1st Qu.:0.1721   1st Qu.:0.02765  
+##  Median :0.24018   Median :0.468850   Median :0.2641   Median :0.14111  
+##  Mean   :0.25234   Mean   :0.493093   Mean   :0.2809   Mean   :0.22603  
+##  3rd Qu.:0.38889   3rd Qu.:0.757868   3rd Qu.:0.4266   3rd Qu.:0.35135  
+##  Max.   :0.49968   Max.   :0.979922   Max.   :0.5164   Max.   :0.94027  
+##      z.HWE         
+##  Min.   :-22.1441  
+##  1st Qu.:-17.9391  
+##  Median : -1.5626  
+##  Mean   : -6.1936  
+##  3rd Qu.: -0.6224  
+##  Max.   :  2.4320</code></pre>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>ok.MAF &lt;-<span class="st"> </span>qc.all.marker<span class="op">$</span>MAF <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.05</span></span>
+<span id="cb58-2"><a href="#cb58-2"></a>raw.all.ok &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">genotypes =</span> raw.all.ok<span class="op">$</span>genotypes[,ok.MAF],</span>
+<span id="cb58-3"><a href="#cb58-3"></a>                      <span class="dt">fam =</span> raw.all.ok<span class="op">$</span>fam,</span>
+<span id="cb58-4"><a href="#cb58-4"></a>                      <span class="dt">map =</span> raw.all.ok<span class="op">$</span>map[ok.MAF,])</span>
+<span id="cb58-5"><a href="#cb58-5"></a></span>
+<span id="cb58-6"><a href="#cb58-6"></a>qc.all.marker2 &lt;-<span class="st"> </span><span class="kw">col.summary</span>( raw.all.ok<span class="op">$</span>genotypes )</span>
+<span id="cb58-7"><a href="#cb58-7"></a>ok.markers &lt;-<span class="st"> </span>qc.all.marker2<span class="op">$</span>Call.rate <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.99</span></span></code></pre></div>
+<p>Choosing the subset</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a>raw_all &lt;-<span class="st"> </span><span class="kw">genDataRead</span>(<span class="dt">file.in =</span> <span class="kw">file.path</span>(data_dir, <span class="st">&quot;data.ped&quot;</span>), <span class="dt">format =</span> <span class="st">&quot;ped&quot;</span>,</span>
+<span id="cb59-2"><a href="#cb59-2"></a>                       <span class="dt">map.file =</span> <span class="kw">file.path</span>(data_dir, <span class="st">&quot;data1.map&quot;</span>))</span></code></pre></div>
+<pre><code>## &#39;n.vars&#39; was not given explicitly and will be set to 6 based on the format given.
+## Reading the data in chunks...
+##  -- chunk 1 --
+##  -- chunk 2 -- 
+## ... done reading.
+## Reading the marker names... 
+## ...done
+## Preparing data...
+## ... done preparing
+## Saving data...
+## ... saved to files: ./data_gen.ffData, ./data_gen.RData</code></pre>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a>raw_all</span></code></pre></div>
+<pre><code>## This is raw genetic data read in through genDataRead.
+## 
+## It contains the following parts:
+##    cov.data, gen.data, aux 
+## 
+## with following dimensions:
+##   - covariate variables =  id.fam, id.c, id.f, id.m, sex, cc 
+##       (total  6  covariate variables),
+##   - number of markers =  429 ,
+##   - number of data lines =  1659</code></pre>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a>qc_all &lt;-<span class="st"> </span><span class="kw">genDataGetPart</span>(raw_all, <span class="dt">design =</span> <span class="st">&quot;cc&quot;</span>, <span class="dt">rows =</span> <span class="kw">which</span>(ok.call.rate),</span>
+<span id="cb63-2"><a href="#cb63-2"></a>                         <span class="dt">markers =</span> <span class="kw">which</span>(ok.MAF), <span class="dt">file.out =</span> <span class="st">&quot;qc_all_ok1&quot;</span>)</span></code></pre></div>
+<pre><code>## Provided arguments:
+##  --- chosen markers: 2, 3, 4, 5, 6, 7 ... 423, 424, 425, 426, 427, 429 
+##  --- rows chosen: 1, 2, 3, 4, 5, 7 ... 1653, 1654, 1655, 1656, 1657, 1658 
+## INFO: Will select 1557 rows and 778 columns.</code></pre>
+<pre><code>## opening ff /tmp/RtmpxcPefQ/ff7d2b14297c5e.ff</code></pre>
+<pre><code>## Saving data... 
+## ... saved to files: ./qc_all_ok1_gen.ffData, ./qc_all_ok1_gen.RData</code></pre>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1"></a>qc_all &lt;-<span class="st"> </span><span class="kw">genDataGetPart</span>(qc_all, <span class="dt">design =</span> <span class="st">&quot;cc&quot;</span>, <span class="dt">markers =</span> <span class="kw">which</span>(ok.markers),</span>
+<span id="cb67-2"><a href="#cb67-2"></a>                         <span class="dt">file.out =</span> <span class="st">&quot;qc_all_ok&quot;</span>)</span></code></pre></div>
+<pre><code>## Provided arguments:
+##  --- chosen markers: 1, 2, 3, 4, 5, 6 ... 384, 385, 386, 387, 388, 389 
+## INFO: Will select 1557 rows and 740 columns.</code></pre>
+<pre><code>## opening ff /tmp/RtmpxcPefQ/ff7d2b800da83.ff</code></pre>
+<pre><code>## Saving data... 
+## ... saved to files: ./qc_all_ok_gen.ffData, ./qc_all_ok_gen.RData</code></pre>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1"></a>qc_all</span></code></pre></div>
+<pre><code>## This is raw genetic data read in through genDataRead.
+## 
+## It contains the following parts:
+##    cov.data, gen.data, aux 
+## 
+## with following dimensions:
+##   - covariate variables =  id.fam, id.c, id.f, id.m, sex, cc 
+##       (total  6  covariate variables),
+##   - number of markers =  370 ,
+##   - number of data lines =  1557</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1"></a>qc_all_triads &lt;-<span class="st"> </span><span class="kw">getFullTriads</span>(qc_all, <span class="dt">file.out =</span> <span class="st">&quot;qc_all_ok_triads&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## Checking family and id variables...</code></pre>
+<pre><code>## Warning: Found family size larger than 3! Will extract trios from general
+## pedigree.</code></pre>
+<pre><code>## Warning: 24 mother code(s) and 66 father code(s) refer to non-existing
+## individuals and have been set to missing</code></pre>
+<pre><code>## opening ff /tmp/RtmpxcPefQ/ff7d2b741af215.ff</code></pre>
+<pre><code>## Provided arguments:
+##  --- rows chosen: 1, 2, 3, 6, 7, 8 ... 1550, 1551, 1552, 1553, 1554, 1555 
+## INFO: Will select 1362 rows and 740 columns.
+## Saving data... 
+## ... saved to files: ./qc_all_ok_triads_gen.ffData, ./qc_all_ok_triads_gen.RData</code></pre>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1"></a>qc_all_triads</span></code></pre></div>
+<pre><code>## This is raw genetic data read in through genDataRead.
+## 
+## It contains the following parts:
+##    cov.data, gen.data, aux 
+## 
+## with following dimensions:
+##   - covariate variables =  id.fam, id.c, id.f, id.m, sex, cc 
+##       (total  6  covariate variables),
+##   - number of markers =  370 ,
+##   - number of data lines =  1362</code></pre>
+</div>
 </div>
 <div id="re-using-the-data" class="section level1">
 <h1>Re-using the data</h1>
 <p><em>IMPORTANT:</em> Remember that each time you start a new R session, you need to load the data into the memory with the command:</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a>my.prepared.ped.data &lt;-<span class="st"> </span><span class="kw">genDataLoad</span>(<span class="dt">filename =</span> <span class="st">&quot;my_prepared_ped_data&quot;</span>)</span></code></pre></div>
-<p>This takes much less time than re-reading and running the data preparations! The output of the <code>genDataPreprocess</code> function (or <code>genDataLoad</code>) can then be used to run the analysis.</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1"></a>my.prepared.ped.data &lt;-<span class="st"> </span><span class="kw">genDataLoad</span>(<span class="dt">filename =</span> <span class="st">&quot;my_prepared_ped_data&quot;</span>)</span></code></pre></div>
+<p>This takes much less time than re-reading and running the data preparations!</p>
+</div>
+<div id="preparing-your-data" class="section level1">
+<h1>Preparing your data</h1>
+<p>After loading the data, it is necessary to pre-process it to the internal format used by Haplin. This is done by evoking the command:</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1"></a>my.prepared.ped.data &lt;-<span class="st"> </span><span class="kw">genDataPreprocess</span>(<span class="dt">data.in =</span> qc_all_triads,</span>
+<span id="cb82-2"><a href="#cb82-2"></a>  <span class="dt">design =</span> <span class="st">&quot;triad&quot;</span>, <span class="dt">file.out =</span> <span class="st">&quot;qc_all_preproc&quot;</span>, <span class="dt">dir.out =</span> <span class="st">&quot;.&quot;</span>)</span></code></pre></div>
+<pre><code>## Reading the marker names...</code></pre>
+<pre><code>## Warning: No map file given, map file empty or the number of map file rows not
+## equal to the number of markers in data; will generate dummy marker names.</code></pre>
+<pre><code>## ...done
+## Converting PED format to internal haplin...
+## 
+## Checking family and id variables...
+##    Sorting and re-coding families...</code></pre>
+<pre><code>## opening ff /tmp/RtmpxcPefQ/ff7d2b461af17.ff</code></pre>
+<pre><code>## Recoding covariate data...
+## ...done
+## Recoding genetic data (no. of loci: 370)...
+##    ...running on only one CPU core! This may take some time...
+##    ...checking alleles per SNP...
+##    ...done, all alleles: A T C G 
+##    ...recoding SNPs...
+##    ...done
+## Saving data... 
+## ... saved to files: ./qc_all_preproc_gen.ffData ,  ./qc_all_preproc_gen.RData</code></pre>
+<p><em>CAUTION:</em> This action can be very time-consuming for large datasets (e.g., estimated time for ca.45,000 SNPs and 1,600 individuals, a PED file of ca.700MB, is ca.6 minutes on a 7-core CPU). However, this needs to be done only once and the output, stored in small files, can be used for the subsequent analysis repeatedly.</p>
+<p>This will also create <code>.RData</code> and <code>.ffData</code> files, which take much less space than the input PED files. Be careful not to delete these files, as they can be re-used by simply loading into R (the <code>genDataLoad</code> function) right before Haplin analysis.</p>
+<p><em>NOTE:</em> The information on the <code>my.prepared.ped.data</code> object can be displayed by simply writing the name of the object.</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1"></a>my.prepared.ped.data</span></code></pre></div>
+<pre><code>## 
+##      This is preprocessed data, ready for haplin analysis.
+## 
+##      It contains the following parts:
+##    cov.data, gen.data, aux 
+## 
+##      with following dimensions:
+##    - number of covariate variables =  10 ,  - number of markers =  370 ,  - number of individuals/families =  454</code></pre>
 </div>
 </div>
 </div>

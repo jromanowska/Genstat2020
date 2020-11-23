@@ -178,7 +178,9 @@ We will re-do the QC from DAY 1 on the entire dataset (not only children) and ba
 ```{r}
 library(snpStats)
 
-raw.all <- read.pedfile(file = "data.ped", snps = "data.map", which = 2)
+data_dir <- file.path("..", "..", "DAY1", "genetics_R")
+raw.all <- read.pedfile(file = file.path(data_dir, "data.ped"),
+                        snps = file.path(data_dir, "data.map"), which = 2)
 raw.all.gen <- raw.all$genotypes
 
 qc.all <- row.summary(raw.all.gen)
@@ -204,13 +206,17 @@ ok.markers <- qc.all.marker2$Call.rate >= 0.99
 Choosing the subset
 
 ```{r}
-raw_all <- genDataRead(file.in = "data.ped", format = "ped", map.file = "data1.map")
+raw_all <- genDataRead(file.in = file.path(data_dir, "data.ped"), format = "ped",
+                       map.file = file.path(data_dir, "data1.map"))
 raw_all
-qc_all <- genDataGetPart(raw_all, design = "cc", rows = which(ok.call.rate), markers = which(ok.MAF), file.out = "qc_all_ok1")
-qc_all <- genDataGetPart(qc_all, design = "cc", markers = which(ok.markers), file.out = "qc_all_ok")
+qc_all <- genDataGetPart(raw_all, design = "cc", rows = which(ok.call.rate),
+                         markers = which(ok.MAF), file.out = "qc_all_ok1")
+qc_all <- genDataGetPart(qc_all, design = "cc", markers = which(ok.markers),
+                         file.out = "qc_all_ok")
 qc_all
 
 qc_all_triads <- getFullTriads(qc_all, file.out = "qc_all_ok_triads")
+qc_all_triads
 ```
 
 # Re-using the data
