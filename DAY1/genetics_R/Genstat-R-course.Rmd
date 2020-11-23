@@ -37,14 +37,13 @@ obj
 
 3. Using the data
 
-  + Accessing the column named `cc.status`, using the `$` sign (0 codes for control and 1 for case)
+  + Accessing the column named `cc.status` (0 codes for control and 1 for case)
 
 ```{r}
-cc.status <- obj$cc.status
-class(cc.status)
-mean(cc.status)
-summary(cc.status)
-table(cc.status)
+obj %>%
+  select(cc.status)
+obj %>% summarise(mean = mean(cc.status))
+obj %>% count(cc.status)
 ```
 
   + Accessing the first SNP
@@ -94,6 +93,7 @@ table(snp8)
 obj[obj == -9] <- NA
 snp8 <- obj %>%
   select(snp_8.1, snp_8.2)
+snp8
 ```
 
 ### Exercise 1
@@ -230,6 +230,8 @@ obj <- read_table2("data_a_intro_R.dat")
 ```{r}
 snp24 <- read_table2("data_b_intro_R.dat")
 snp24
+obj
+
 obj <- obj %>%
   bind_cols(snp24)
 obj
@@ -247,42 +249,18 @@ obj
 
 ## Save and load objects
 
-- `write_table` writes a data.frame, tibble, or matrix into a text-formatted file.
+- `write_delim` writes a data.frame, tibble, or matrix into a text-formatted file.
 - `save` saves objects (not only matrices) to a binary file, readable by R with the `load` function.
 - `ls` function shows what objects are currently loaded into memory.
 
 ```{r}
-write_delim(obj, path = "data_prep_R.dat", col_names = TRUE)
+write_delim(obj, path = "data_prep_R.dat", delim = " ", col_names = TRUE)
 
 save(obj, file = "obj.RData")
 rm(obj)
 ls()
 load("obj.RData")
 ls()
-```
-
----
-
-## Packages
-
-One of the strengths of R is the vast number of packages that can be installed at no cost. 
-
-1. Installing package(s)
-  
-```{r, eval=FALSE}
-install.packages("Haplin)
-```
-
-2. Loading a package
-
-```{r}
-library(Haplin)
-```
-
-3. Help function for entire package
-
-```{r}
-help(package = "Haplin")
 ```
 
 ---
@@ -458,12 +436,6 @@ str(raw.child)
 ```{r}
 chr1.snps <- raw.all$map$snp.names[raw.all$map$chromosome == "1"]
 chr1.snps
-```
-
-* since this is a factor, we must reformat it to numeric, to use it in selection
-
-```{r}
-chr1.snps <- as.character(levels(chr1.snps)[chr1.snps])
 ```
 
 * take only those SNPs from the genotype matrix
