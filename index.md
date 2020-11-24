@@ -8,3 +8,5 @@ The official page: https://folk.uib.no/gjessing/genetics/software/haplin/other/N
 ### DAY 5
 
 [Gene-methylation interactions](DAY5/JRom_GxMe/gene-methyl_interact_JRomanowska.html)
+
+[Bioinformatics databases and services](DAY5/JRom_bioinf_DB/JRom_bioinf_DBs.html)
