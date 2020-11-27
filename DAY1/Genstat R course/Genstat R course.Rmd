@@ -459,13 +459,6 @@ str(raw.child)
 chr1.snps <- raw.all$map$snp.names[raw.all$map$chromosome == "1"]
 chr1.snps
 ```
-
-* since this is a factor, we must reformat it to numeric, to use it in selection
-
-```{r}
-chr1.snps <- as.character(levels(chr1.snps)[chr1.snps])
-```
-
 * take only those SNPs from the genotype matrix
 
 ```{r}
@@ -523,7 +516,7 @@ mothers <- grep(pattern = "_2", x = raw.all$fam$member)
 qc.child <- row.summary(raw.child.gen)
 summary(qc.child)
 
-plot(qc.child)
+plot(qc.child$Heterozygosity,qc.child$Call.rate, xlab = "Heterozygosity", ylab = " Call rate")
 ```
 
 2. We don't want the individuals with a call rate lower than `0.95`:
