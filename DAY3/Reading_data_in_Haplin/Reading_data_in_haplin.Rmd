@@ -142,27 +142,6 @@ subset.genes
 
 _CAUTION:_ Note that these functions work only with objects resulting from `genDataRead`, and not `genDataPreprocess`, as the preprocessing disturbs the coding of the data, thus making the output not easy to understand.
 
-# Preparing your data
-
-After loading the data, it is necessary to pre-process it to the internal format used by Haplin. This is done by evoking the command:
-
-```{r}
-my.prepared.ped.data <- genDataPreprocess(data.in = my.ped.data,
-  map.file = file.path(exmpls.dir, "exmpl_data.map"),
-  design = "triad", file.out = "my_prepared_ped_data", dir.out = ".")
-```
-
-_CAUTION:_ This action can be very time-consuming for large datasets (e.g., estimated time for ca.45,000 SNPs and 1,600 individuals, a PED file of ca.700MB, is ca.6 minutes on a 7-core CPU). However, this needs to be done only once and the output, stored in small files, can be used for the subsequent analysis repeatedly. (See also section [Choosing a subset of data](#subset)
-	
-This will also create `.RData` and `.ffData` files, which take much less space than the input PED files. Be careful not to delete these files, as they can be re-used by simply loading into R (the `genDataLoad` function) right before Haplin analysis.
-	
-_NOTE:_ The information on the `my.prepared.ped.data` object can be displayed by simply writing the name of the object.
-
-```{r}
-my.prepared.ped.data
-```
-
-
 # Choosing a subset of data {#subset}
 
 If you know that you want to focus your analysis on a certain region of the entire SNP set, or perhaps you're impatient and want to check out Haplin without waiting a long time for the preprocessing to finish, you can easily choose a subset of the data to pre-process and analyze. This can be done with the command:
@@ -192,6 +171,54 @@ To make it easier to choose certain subsets of data, we created the following fu
 *  `getMothers` and `getFathers` - extracts only the fathers or mothers, respectively;
 *  `getFullTriads` - extracts only the full families, if the input data contains also dyads.
 
+## Example
+
+We will re-do the QC from DAY 1 on the entire dataset (not only children) and based on that, we will choose a subset of the data.
+
+```{r}
+library(snpStats)
+
+data_dir <- file.path("..", "..", "DAY1", "genetics_R")
+raw.all <- read.pedfile(file = file.path(data_dir, "data.ped"),
+                        snps = file.path(data_dir, "data.map"), which = 2)
+raw.all.gen <- raw.all$genotypes
+
+qc.all <- row.summary(raw.all.gen)
+summary(qc.all)
+
+ok.call.rate <- qc.all$Call.rate >= 0.95
+raw.all.ok <- list(genotypes = raw.all$genotypes[ok.call.rate,],
+                      fam = raw.all$fam[ok.call.rate,],
+                      map = raw.all$map)
+
+qc.all.marker <- col.summary(raw.all.ok$genotypes)
+summary(qc.all.marker)
+
+ok.MAF <- qc.all.marker$MAF >= 0.05
+raw.all.ok <- list(genotypes = raw.all.ok$genotypes[,ok.MAF],
+                      fam = raw.all.ok$fam,
+                      map = raw.all.ok$map[ok.MAF,])
+
+qc.all.marker2 <- col.summary( raw.all.ok$genotypes )
+ok.markers <- qc.all.marker2$Call.rate >= 0.99
+```
+
+Choosing the subset
+
+```{r}
+raw_all <- genDataRead(file.in = file.path(data_dir, "data.ped"), format = "ped",
+                       map.file = file.path(data_dir, "data1.map"))
+raw_all
+qc_all <- genDataGetPart(raw_all, design = "cc", rows = which(ok.call.rate),
+                         markers = which(ok.MAF), file.out = "qc_all_ok1")
+qc_all <- genDataGetPart(qc_all, design = "cc", markers = which(ok.markers),
+                         file.out = "qc_all_ok")
+qc_all
+
+qc_all_triads <- getFullTriads(qc_all, file.out = "qc_all_ok_triads")
+qc_all_triads
+```
+
 # Re-using the data
 
 _IMPORTANT:_ Remember that each time you start a new R session, you need to load the data into the memory with the command:
@@ -200,5 +227,25 @@ _IMPORTANT:_ Remember that each time you start a new R session, you need to load
 my.prepared.ped.data <- genDataLoad(filename = "my_prepared_ped_data")
 ```
 
-This takes much less time than re-reading and running the data preparations! The output of the `genDataPreprocess` function (or `genDataLoad`) can then be used to run the analysis.
+This takes much less time than re-reading and running the data preparations!
+
+# Preparing your data
+
+After loading the data, it is necessary to pre-process it to the internal format used by Haplin. This is done by evoking the command:
+
+```{r}
+my.prepared.ped.data <- genDataPreprocess(data.in = qc_all_triads,
+  design = "triad", file.out = "qc_all_preproc", dir.out = ".")
+```
+
+_CAUTION:_ This action can be very time-consuming for large datasets (e.g., estimated time for ca.45,000 SNPs and 1,600 individuals, a PED file of ca.700MB, is ca.6 minutes on a 7-core CPU). However, this needs to be done only once and the output, stored in small files, can be used for the subsequent analysis repeatedly.
+	
+This will also create `.RData` and `.ffData` files, which take much less space than the input PED files. Be careful not to delete these files, as they can be re-used by simply loading into R (the `genDataLoad` function) right before Haplin analysis.
+	
+_NOTE:_ The information on the `my.prepared.ped.data` object can be displayed by simply writing the name of the object.
+
+```{r}
+my.prepared.ped.data
+```
+
 

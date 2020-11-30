@@ -7,6 +7,10 @@
 ## Open project Genstat2020.Rproj
 
 ## Loading packages (if not already loaded)
+## Install Haplin from .tar.gz file
+# install.packages("Haplin_7.16.2.tar.gz",type = "source", repos = NULL)
+## Install Haplin from CRAN
+install.packages("Haplin")
 library(Haplin)
 
 ## Load data from before lunch
