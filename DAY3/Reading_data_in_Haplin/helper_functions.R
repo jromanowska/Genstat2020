@@ -1038,3 +1038,111 @@ genDataRead <- function( file.in = stop( "Filename must be given!", call. = FALS
 	
 	return( data.out )
 }
+
+genDataPreprocess <- function( data.in = stop( "You have to give the object to preprocess!" ), map.file, design = "triad", file.out = "data_preprocessed", dir.out = ".", ncpu = 1, overwrite = NULL ){
+	# checking input parameters:
+	if( !missing( map.file ) ){
+		if( !file.exists( map.file ) ){
+			stop( "It seems like the map.file (", map.file, ") doesn't exist! Check and try once more.", call. = FALSE )
+		}
+	} else if( !is.null( data.in$aux$map.filename ) ){
+		map.file <- data.in$aux$map.filename
+	} else {
+		map.file <- NULL
+	}
+	
+	.info <- data.in$aux$info
+	.format <- .info$filespecs$format
+	if( !( .format %in% c( "haplin", "ped" ) ) ){
+		stop( "Given format (", format,") not recognized! Format has to be one of: ", paste( c("haplin", "ped"), collapse = ", " ), call. = FALSE )
+	}
+	
+	design.list <- get( ".design.list", envir = Haplin:::.haplinEnv )
+	if( !( design %in% design.list ) ){
+		stop( "Given design(", design,") not recognized! Design has to be one of: ", paste( design.list, collapse = ", " ), call. = FALSE )
+	}
+	.info$model$design <- design
+	
+	files.list <- f.make.out.filename( file.out = file.out, dir.out = dir.out, overwrite = overwrite )
+	
+
+	if( !is( data.in, "haplin.data" ) ||
+	  !all( names( data.in ) == Haplin:::.haplinEnv$.haplin.data.names ) ){
+		stop( "The input data is not in the correct format!", call. = FALSE )
+	}
+	
+	if( ncpu < 1 ){
+		cat( " You set 'ncpu' to a number less than 1 - resetting it to 1.\n" )
+		ncpu <- 1
+	}
+	#--------------------------------------------
+
+	# creating SNP names (dummy names)
+	tot.gen.ncol <- sum( unlist( lapply( data.in$gen.data, ncol ) ) )
+	gen.data.colnames <- f.create.snp.names( map.file, tot.gen.ncol, format = .format, design = design )
+	marker.names <- gen.data.colnames$marker.names
+	gen.data.colnames <- gen.data.colnames$gen.data.colnames
+
+	cur.col <- 1
+	for( i in 1:length( data.in$gen.data ) ){
+		cur.ncol <- ncol( data.in$gen.data[[ i ]] )
+		colnames( data.in$gen.data[[ i ]] ) <- gen.data.colnames[ cur.col:( cur.col + cur.ncol - 1 ) ]
+		cur.col <- cur.col + cur.ncol
+	}
+
+	# re-organizing data from PED format to internal haplin
+	if( .format == "ped" ){
+		data.new <- Haplin:::f.ped.to.mfc.new( data.in, design )
+	} else {
+		data.new <- data.in
+		
+		if( !is.null( data.new$cov.data ) ){
+			orig.colnames <- colnames( data.new$cov.data )
+			new.colnames <- paste0( orig.colnames, ".c" )
+			colnames( data.new$cov.data ) <- new.colnames
+		}
+	}
+	
+	# re-coding the variables per column
+	data.recoded <- Haplin:::f.prep.data.parallel( data.new, design, marker.names, ncpu )
+	
+	## add information
+	class( data.recoded ) <- "haplin.ready"
+	data.recoded$aux$info <- .info
+	data.recoded$aux$class <- class( data.recoded )
+	data.recoded$aux$marker.names <- marker.names
+	data.recoded$aux$map.filename <- map.file
+	
+	## find rows with missing data, keep for future reference
+	sum.na.list <- lapply( data.recoded$gen.data, function( gen.el.ff ){
+		gen.el <- Haplin:::f.extract.ff.numeric( gen.el.ff )
+		rowSums( is.na( gen.el ) )
+	})
+	sum.na <- Reduce( cbind, sum.na.list )
+	colnames( sum.na ) <- NULL
+	.is.na <- sum.na > 0.1
+	rows.with.na <- sum( .is.na )
+	data.recoded$aux$nrows.with.missing <- rows.with.na
+	data.recoded$aux$which.rows.with.missing <- which( .is.na )
+	
+	## saving the data in the .RData and .ffData files
+	cat( "Saving data... \n" )
+	cur.names <- c()
+	for( i in 1:length( data.recoded$gen.data ) ){
+		cur.name <- paste( get( ".gen.cols.name", envir = Haplin:::.haplinEnv ), i, sep = "." )
+		assign( cur.name, data.recoded$gen.data[[i]] )
+		cur.names <- c( cur.names, cur.name )
+	}
+	aux <- data.recoded$aux
+	# here, we need to change the format, since now it's 6 columns per 1 marker in the genotype matrix
+	aux$info$filespecs$format <- "haplin"
+	
+	save.list <- c( cur.names, "aux" )
+	if( !is.null( data.recoded$cov.data ) ){
+		cov.data.in <- data.recoded$cov.data
+		save.list <- c( save.list, "cov.data.in" )
+	}
+	ff::ffsave( list = save.list, file = file.path( dir.out, files.list$file.out.base ) )
+	cat( "... saved to files:", files.list$file.out.ff, ", ", files.list$file.out.aux, "\n" )
+	return( data.recoded )
+}
