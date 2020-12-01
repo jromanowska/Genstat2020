@@ -1,6 +1,7 @@
 ## NORBIS GENESTAT COURSE
 
 setwd("DAY3/Post_processing/")
+source("../Reading_data_in_Haplin/helper_functions.R")
 
 #############################
 ## POST-PROCESSING OF DATA ##
@@ -19,6 +20,7 @@ library(Haplin)
 qc_all <- genDataLoad(filename = "qc_all_preproc", dir.in = "../Reading_data_in_Haplin")
 
 ## Look at data
+showSNPnames(qc_all)
 qc_all
 
 ## Exercise 1
