@@ -11,6 +11,7 @@ output:
 
 ```{r setup, include=FALSE}
 library(readr)
+library(dplyr)
 library(tibble)
 exmpls.dir <- system.file("extdata", package = "Haplin")
 exmpl.file1 <- file.path(exmpls.dir, "HAPLIN.trialdata.txt")
@@ -36,6 +37,9 @@ Both types of data are read in through the use of `genDataRead` function:
 
 ```{r}
 library(Haplin)
+# temporarily, read in updated functions from the script;
+#   these will be published on CRAN shortly
+source("helper_functions.R")
 
 my.ped.data <- genDataRead(file.in = exmpl.file2, file.out = "my_ped_data",
   dir.out = ".", format = "ped")
@@ -219,6 +223,33 @@ qc_all_triads <- getFullTriads(qc_all, file.out = "qc_all_ok_triads")
 qc_all_triads
 ```
 
+Since we've removed some markers due to missing data, we need to create
+a new map file.
+
+```{r}
+orig.map <- read_delim(file.path(data_dir, "data1.map"), delim = " ")
+orig.map
+new.map <- orig.map %>%
+  filter(snpname %in% showSNPnames(qc_all_triads, n = "all"))
+new.map
+write_delim(new.map, path = "qc_all.map", delim = " ", col_names = TRUE)
+```
+
+# Preparing your data
+
+After loading the data, it is necessary to pre-process it to the internal format used by Haplin. This is done by evoking the command:
+
+```{r}
+my.prepared.ped.data <- genDataPreprocess(data.in = qc_all_triads,
+  map.file = "qc_all.map", design = "triad", file.out = "qc_all_preproc")
+my.prepared.ped.data
+showSNPnames(my.prepared.ped.data)
+```
+
+_CAUTION:_ This action can be very time-consuming for large datasets (e.g., estimated time for ca.45,000 SNPs and 1,600 individuals, a PED file of ca.700MB, is ca.6 minutes on a 7-core CPU). However, this needs to be done only once and the output, stored in small files, can be used for the subsequent analysis repeatedly.
+	
+This will also create `.RData` and `.ffData` files, which take much less space than the input PED files. Be careful not to delete these files, as they can be re-used by simply loading into R (the `genDataLoad` function) right before Haplin analysis.
+	
 # Re-using the data
 
 _IMPORTANT:_ Remember that each time you start a new R session, you need to load the data into the memory with the command:
@@ -228,24 +259,5 @@ my.prepared.ped.data <- genDataLoad(filename = "my_prepared_ped_data")
 ```
 
 This takes much less time than re-reading and running the data preparations!
-
-# Preparing your data
-
-After loading the data, it is necessary to pre-process it to the internal format used by Haplin. This is done by evoking the command:
-
-```{r}
-my.prepared.ped.data <- genDataPreprocess(data.in = qc_all_triads,
-  design = "triad", file.out = "qc_all_preproc", dir.out = ".")
-```
-
-_CAUTION:_ This action can be very time-consuming for large datasets (e.g., estimated time for ca.45,000 SNPs and 1,600 individuals, a PED file of ca.700MB, is ca.6 minutes on a 7-core CPU). However, this needs to be done only once and the output, stored in small files, can be used for the subsequent analysis repeatedly.
-	
-This will also create `.RData` and `.ffData` files, which take much less space than the input PED files. Be careful not to delete these files, as they can be re-used by simply loading into R (the `genDataLoad` function) right before Haplin analysis.
-	
-_NOTE:_ The information on the `my.prepared.ped.data` object can be displayed by simply writing the name of the object.
-
-```{r}
-my.prepared.ped.data
-```
 
 
