@@ -1,7 +1,6 @@
 ## NORBIS GENESTAT COURSE
 
 setwd("DAY3/Post_processing/")
-source("../Reading_data_in_Haplin/helper_functions.R")
 
 #############################
 ## POST-PROCESSING OF DATA ##
@@ -15,6 +14,7 @@ source("../Reading_data_in_Haplin/helper_functions.R")
 ## Install Haplin from CRAN
 if(!"Haplin"%in%installed.packages()) install.packages("Haplin")
 library(Haplin)
+# source("../Reading_data_in_Haplin/helper_functions.R")
 
 ## Load data from before lunch
 qc_all <- genDataLoad(filename = "qc_all_preproc", dir.in = "../Reading_data_in_Haplin")
@@ -78,7 +78,7 @@ plot(haplinRuns, plot.signif.only = TRUE, signif.thresh = 0.01)
 ## Bioconductor is not a "normal" package
 ## Installing qvalue
 if(!"BiocManager"%in%installed.packages()) install.packages("BiocManager")
-BiocManager::install("qvalue", update = FALSE)
+if(!"qvalue"%in%installed.packages()) BiocManager::install("qvalue", update = FALSE)
 
 ## Loading qvalue
 library(qvalue)
