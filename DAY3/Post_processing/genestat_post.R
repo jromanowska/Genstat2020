@@ -1,5 +1,7 @@
 ## NORBIS GENESTAT COURSE
 
+setwd("DAY3/Post_processing/")
+
 #############################
 ## POST-PROCESSING OF DATA ##
 #############################
@@ -10,23 +12,20 @@
 ## Install Haplin from .tar.gz file
 # install.packages("Haplin_7.16.2.tar.gz",type = "source", repos = NULL)
 ## Install Haplin from CRAN
-install.packages("Haplin")
+if(!"Haplin"%in%installed.packages()) install.packages("Haplin")
 library(Haplin)
 
 ## Load data from before lunch
-qc_all <- genDataLoad(filename = "qc_all", dir.in = "../Reading_data_in_Haplin")
+qc_all <- genDataLoad(filename = "qc_all_preproc", dir.in = "../Reading_data_in_Haplin")
 
 ## Look at data
 qc_all
 
 ## Exercise 1
-## a) What is the total number of individuals?
+## a) What is the total number of individuals/families?
 ##
-## b) What is the number of cases? 
+## b) What is the number of SNPs? 
 ##
-## c) What is the number of SNPs? 
-##
-## d) What is the number of chromosomes? 
 
 ## Quality control. Reminder
 ## Marker == SNP
@@ -60,7 +59,14 @@ pRR.result <- result[,c("marker","RR.est.","RR.p.value")]
 
 head(pRR.result)
 
+## Look at p-values
+## x-axis: SNP names
+## y-axis: p-value
+## Cutoff at p=0.25
+plotPValues( haplinRuns, plot.signif.only = TRUE, signif.thresh = 0.05 )
 
+## Plotting RRs with confidence intervals and allele frequencies for SNPs with lowest p-values
+plot(haplinRuns, plot.signif.only = TRUE, signif.thresh = 0.01)
 
 #######################################################################
 ## q-values
@@ -68,11 +74,9 @@ head(pRR.result)
 ## PNAS 2003
 #######################################################################
 ## Bioconductor is not a "normal" package
-## Install by sourcing
-source("http://bioconductor.org/biocLite.R")
-
 ## Installing qvalue
-biocLite("qvalue")
+if(!"BiocManager"%in%installed.packages()) install.packages("BiocManager")
+BiocManager::install("qvalue", update = FALSE)
 
 ## Loading qvalue
 library(qvalue)
@@ -158,10 +162,8 @@ pQQ(ps[-length(ps)], lim = c(0,5.2))
 ## "New" p-values
 pQQ(ps, lim = c(0,5.2))
 
-## Note that the expected values of rs287 and the other SNPs jumped above
+## Note that the expected values of rs287 and the other SNPs jumped to
 ##  the red line when we added rs1. Why?
-
-
 
 #######################################################################
 ## Volcano plot
