@@ -145,9 +145,10 @@ We might also check what is already known about this SNP or gene.
 
 - **CpGs within promoters**
 
-    - find what TFs bind there^[visualize JasparDB information in ensembl: http://jaspar.genereg.net/genome-tracks/#ensembl_tracks]
+    - find what TFs bind there<sup>2</sup>
 
-.footnote[<sup>1</sup> Ref: https://doi.org/10.1093/database/bax028]
+.footnote[<sup>1</sup> Ref: https://doi.org/10.1093/database/bax028;    
+<sup>2</sup> visualize JasparDB information in ensembl: http://jaspar.genereg.net/genome-tracks/#ensembl_tracks]
 
 ???
 
